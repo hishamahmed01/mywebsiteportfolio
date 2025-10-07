@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hisham Ahmed — Projects</title>
+    <meta name="description" content="A professional portfolio for Hisham Ahmed, showcasing AI-inspired projects, code, and engineering notes." />
+
+    <link rel="icon" href="assets/hisham-logo.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.css">
+    
+    <style>
+        :root {
+            --bg: #ffffff; /* This is white in your code, but the body background is dark. Assuming you meant a dark background variable. I'll stick to your provided variables. */
+            --card: #dadee4;
+            --muted: rgba(255, 255, 255, 0.75);
+            --accent-1: #6a5acd;
+            --accent-2: #8a7de4;
+            --accent-3: #9748b6;
+            --glass: rgba(255, 255, 255, 0.04);
+            --radius: 16px;
+        }
+        
+        /* General Styles and Animations */
+        * {
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 🔴 REMOVED: html { scroll-behavior: smooth; } */
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+            /* Note: Original code had --bg: #ffffff, but body color was #e6eef8 (light text on dark background). 
+               Setting background to a dark color to match text color contrast. */
+            background-color: #0d1222; 
+            color: #e6eef8;
+            line-height: 1.6;
+            background-image: radial-gradient(circle at 15% 50%, rgba(106, 90, 205, 0.1) 0%, transparent 40%), 
+                              radial-gradient(circle at 85% 50%, rgba(144, 110, 255, 0.1) 0%, transparent 40%);
+            animation: none; 
+        }
+
+        /* 🟢 LENIS RECOMMENDED STYLES */
+        .lenis.lenis-smooth {
+            scroll-behavior: auto !important;
+        }
+        html.lenis {
+            height: auto;
+        }
+
+        /* Prevent background scroll when mobile menu is open */
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px;
+        }
+
+        h1, h2, h3, p {
+            margin: 0;
+        }
+        
+        a {
+            text-decoration: none;
+            color: var(--muted);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent-3);
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13, 18, 34, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 16px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease-in-out;
+        }
+        
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .header .logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            color: #05060a;
+            transition: all 0.4s ease-in-out;
+        }
+        
+        .header nav a {
+            margin-left: 12px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .header nav a:hover {
+            background: var(--glass);
+            transform: translateY(-2px) scale(1.05);
+        }
+        
+        .header nav a.active {
+            color: var(--accent-3);
+            background: var(--glass);
+            border-color: var(--accent-3);
+        }
+
+        /* Header Minimization Styles */
+        .header-minimized {
+            padding: 8px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-minimized .brand {
+            gap: 8px;
+        }
+
+        .header-minimized .logo {
+            width: 40px;
+            height: 40px;
+            font-size: 14px;
+        }
+
+        .header-minimized .subtitle {
+            display: none;
+        }
+
+        .header-minimized h1 {
+            font-size: 1rem;
+        }
+        
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+        }
+        
+        /* Hamburger Menu Styles */
+        .hamburger {
+            display: none; 
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            z-index: 101;
+        }
+        
+        .hamburger .bar {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: #e6eef8;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(13, 18, 34, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 99;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mobile-menu-overlay.active {
+            display: flex;
+        }
+
+        .mobile-menu-overlay a {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 5px 0;
+            color: #e6eef8;
+            transition: color 0.3s ease;
+        }
+
+        /* Hamburger to "X" animation */
+        .hamburger.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .bar:nth-child(1) {
+            transform: translateY(11.5px) rotate(45deg);
+        }
+
+        .hamburger.active .bar:nth-child(3) {
+            transform: translateY(-11.5px) rotate(-45deg);
+        }
+        
+        /* Media query for mobile responsiveness */
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+        }
+        
+        /* Project Section */
+        .projects-header {
+            text-align: center;
+            margin: 40px 0 20px 0;
+            color:#e6eef8; /* Changed color to match body text */
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 900px) {
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .project-card {
+            /* Note: Blending dark background with the light card color */
+            background: linear-gradient(180deg, rgba(21, 27, 46, 0.9), rgba(21, 27, 46, 0.6));
+            padding: 24px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px); 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .project-image {
+            width: 100%;
+            height: 200px;
+            background-color: #2a334d;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .project-meta h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .project-meta .project-links a {
+            font-size: 13px;
+            color: var(--muted);
+            margin-left: 10px;
+            font-weight: 600;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .project-meta .project-links a:hover {
+            color: var(--accent-3);
+            transform: translateY(-2px);
+        }
+
+        .project-meta .project-links i {
+            margin-right: 4px;
+        }
+        
+        .project-description {
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .project-tag {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 28px 0;
+            background: rgba(13, 18, 34, 0.6);
+            backdrop-filter: blur(5px);
+            color: rgba(255, 255, 255, 0.6); /* Changed color to be visible on dark background */
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: var(--accent-2);
+            margin: 0 6px;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--accent-3);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header" id="mainHeader">
+        <div class="container">
+            <div class="brand">
+                <div class="logo">HA</div>
+                <div>
+                    <h1>Hey, I'm <strong>Hisham Ahmed</strong></h1>
+                    <p class="subtitle">Gen-Z coder • AI tinkerer • Frontend & WebGL nerd</p>
+                </div>
+            </div>
+            
+            <nav class="desktop-nav">
+                <a href="index.html">Home</a>
+                <a href="project.html" class="active">Projects</a>
+                <a href="aboutme.html">About me</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="hamburger" id="hamburgerMenu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+        
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+            <a href="index.html">Home</a>
+            <a href="project.html">Projects</a>
+            <a href="aboutme.html">About me</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2 class="projects-header">My Featured Projects</h2>
+        <div class="projects-grid">
+            <article class="project-card">
+                <div class="project-image">
+                    <img src="https://placehold.co/800x450/4f5b73/ffffff?text=Project+1+Preview" alt="Placeholder image for Project 1">
+                </div>
+                <div class="project-meta">
+                    <h3>Realtime Chat AI</h3>
+                    <div class="project-links">
+                        <a href="#" aria-label="Live Demo"><i class="fa-solid fa-globe"></i> Live</a>
+                        <a href="#" aria-label="GitHub Repository"><i class="fa-brands fa-github"></i> Repo</a>
+                    </div>
+                </div>
+                <p class="project-description">A lightweight, modern chat server with streaming messages and a web client. This project focuses on WebSockets for real-time communication and secure token-based authentication.</p>
+                <div class="project-tags">
+                    <span class="project-tag">Node.js</span>
+                    <span class="project-tag">WebSockets</span>
+                    <span class="project-tag">Express</span>
+                    <span class="project-tag">Redis</span>
+                </div>
+            </article>
+
+            <article class="project-card">
+                <div class="project-image">
+                    <img src="https://placehold.co/800x450/4f5b73/ffffff?text=Project+2+Preview" alt="Placeholder image for Project 2">
+                </div>
+                <div class="project-meta">
+                    <h3>3D Data Visualizer</h3>
+                    <div class="project-links">
+                        <a href="#" aria-label="Live Demo"><i class="fa-solid fa-globe"></i> Live</a>
+                        <a href="#" aria-label="GitHub Repository"><i class="fa-brands fa-github"></i> Repo</a>
+                    </div>
+                </div>
+                <p class="project-description">An interactive 3D data visualizer that renders large datasets with exceptional performance. This project leverages GPU instancing and custom shaders written in GLSL for high-fidelity rendering.</p>
+                <div class="project-tags">
+                    <span class="project-tag">Three.js</span>
+                    <span class="project-tag">WebGL</span>
+                    <span class="project-tag">GLSL</span>
+                    <span class="project-tag">Data Viz</span>
+                </div>
+            </article>
+
+            <article class="project-card">
+                <div class="project-image">
+                    <img src="https://placehold.co/800x450/3a4768/ffffff?text=Project+3+Preview" alt="Placeholder image for Project 3">
+                </div>
+                <div class="project-meta">
+                    <h3>E-commerce Frontend</h3>
+                    <div class="project-links">
+                        <a href="#" aria-label="Live Demo"><i class="fa-solid fa-globe"></i> Live</a>
+                        <a href="#" aria-label="GitHub Repository"><i class="fa-brands fa-github"></i> Repo</a>
+                    </div>
+                </div>
+                <p class="project-description">A high-performance e-commerce storefront built with Next.js, featuring server-side rendering, product search, and optimized asset loading for fast Core Web Vitals.</p>
+                <div class="project-tags">
+                    <span class="project-tag">Next.js</span>
+                    <span class="project-tag">React</span>
+                    <span class="project-tag">Tailwind CSS</span>
+                </div>
+            </article>
+
+             <article class="project-card">
+                <div class="project-image">
+                    <img src="https://placehold.co/800x450/3a4768/ffffff?text=Project+4+Preview" alt="Placeholder image for Project 4">
+                </div>
+                <div class="project-meta">
+                    <h3>Custom Audio Engine</h3>
+                    <div class="project-links">
+                        <a href="#" aria-label="Live Demo"><i class="fa-solid fa-globe"></i> Live</a>
+                        <a href="#" aria-label="GitHub Repository"><i class="fa-brands fa-github"></i> Repo</a>
+                    </div>
+                </div>
+                <p class="project-description">A browser-based synthesizer using the Web Audio API, focusing on low latency and custom filter graphs to produce complex sonic environments.</p>
+                <div class="project-tags">
+                    <span class="project-tag">Web Audio API</span>
+                    <span class="project-tag">Vanilla JS</span>
+                    <span class="project-tag">Synthesis</span>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Hisham Ahmed. All rights reserved.</p>
+            <p>
+                <a href="https://github.com/hishamahmed01" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a> |
+                <a href="#"><i class="fa-brands fa-dribbble"></i> Dribbble</a> |
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+    <script>
+        // DOM Elements
+        const header = document.getElementById('mainHeader');
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        // ------------------------------------------
+        // 🟢 LENIS + GSAP SCROLLTRIGGER INTEGRATION 
+        // ------------------------------------------
+
+        // 1. Initialize Lenis
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+            smoothTouch: false,
+        });
+
+        // 2. Register ScrollTrigger (needed once)
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 3. Connect Lenis to ScrollTrigger's update cycle
+        lenis.on('scroll', ScrollTrigger.update); 
+
+        // 4. Use GSAP's ticker to run the Lenis update loop
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0); 
+
+        // ------------------------------------------
+        // 🌟 SCROLL ANIMATION: Project Card Fade/Slide-in
+        // ------------------------------------------
+
+        projectCards.forEach((card, index) => {
+            gsap.fromTo(card, {
+                opacity: 0, 
+                y: 50, // Start 50px below its final position
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out",
+                // Add a small delay based on index for a staggered look
+                delay: index * 0.1, 
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 90%", // Start animation when the card enters the bottom 10% of the viewport
+                    toggleActions: "play none none none", // Play once when scrolling down
+                }
+            });
+        });
+
+        // ------------------------------------------
+        // 🛠️ EXISTING LOGIC (Modified for Lenis) 
+        // ------------------------------------------
+
+        // Header minimization on scroll
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                header.classList.add('header-minimized');
+            } else {
+                header.classList.remove('header-minimized');
+            }
+        });
+
+        // Hamburger menu functionality
+        hamburgerMenu.addEventListener('click', () => {
+            mobileMenuOverlay.classList.toggle('active');
+            hamburgerMenu.classList.toggle('active');
+            
+            // Toggle body class to prevent background scrolling
+            document.body.classList.toggle('no-scroll'); 
+
+            // Stop/Start Lenis scrolling when mobile menu is open/closed
+            if (document.body.classList.contains('no-scroll')) {
+                lenis.stop();
+            } else {
+                lenis.start();
+            }
+        });
+
+        // Close mobile menu when a link is clicked
+        mobileMenuOverlay.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuOverlay.classList.remove('active');
+                hamburgerMenu.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+                lenis.start(); // Restart Lenis after closing menu
+            });
+        });
+    </script>
+</body>
+</html>
