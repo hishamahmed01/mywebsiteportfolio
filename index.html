@@ -17,8 +17,14 @@
     
     <link rel="stylesheet" href="styles.css">
     
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
     <style>
-      /* --- CSS Variables - Consistent across all pages --- */
+/* ---------------------------------------------------- */
+/* --- YOUR EXISTING GLOBAL CSS & UI STYLES GO HERE --- */
+/* ---------------------------------------------------- */
 :root {
     --bg: #ffffff;
     --card: #dadee4;
@@ -39,16 +45,16 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Place behind content */
+    z-index: -1; 
     opacity: 0.8;
-    transition: background-position 0.2s ease-out; /* Smooth background shift */
+    transition: background-position 0.2s ease-out; 
     background-image: radial-gradient(circle at 15% 50%, rgba(106, 90, 205, 0.1) 0%, transparent 35%), 
                       radial-gradient(circle at 85% 50%, rgba(144, 110, 255, 0.1) 0%, transparent 35%);
     background-size: 200% 200%;
     background-position: 50% 50%;
 }
 
-/* 🟢 LOADER STYLES (Moved from inline/separate style block) */
+/* 🟢 LOADER STYLES */
 .loader-overlay {
     position: fixed;
     top: 0;
@@ -62,14 +68,14 @@
     justify-content: center;
     align-items: center;
     transition: opacity 0.5s ease;
-    opacity: 1; /* Start at 1 for the pre-load effect */
+    opacity: 1; 
 }
 .loader-dots-container { display: flex; }
 .loader-text { 
     margin-top: 20px; 
     font-size: 1.25rem; 
     font-weight: 600; 
-    color: var(--accent-3); /* Changed to accent color for visual appeal */
+    color: var(--accent-3); 
     letter-spacing: 2px; 
     animation: pulse-text 1.5s ease-in-out infinite;
 }
@@ -103,7 +109,6 @@ body {
     line-height: 1.6;
     margin: 0;
     overflow-x: hidden;
-    /* Removed redundant background-image: none; */
 }
 
 /* LENIS RECOMMENDED STYLES */
@@ -129,158 +134,362 @@ a {
 a:hover { color: var(--accent-2); }
 
 /* --- Header (Sticky Navigation) --- */
-.header {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(255, 255, 255, 0.9); 
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 16px 0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: padding 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
-    will-change: padding, box-shadow, transform;
-    
-}
-.header .container { display: flex; justify-content: space-between; align-items: center; }
-.header .brand { display: flex; gap: 12px; align-items: center; transition: all 0.4s ease-in-out; }
-.header .logo { 
-    width: 56px; height: 56px; border-radius: 12px; color: #e9e9e9;
-    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 18px; transition: all 0.4s ease-in-out;
-}
-.header .subtitle { font-size: 0.9rem; color: var(--text-muted); }
-.header h1 { font-size: 1.25rem; font-weight: 800; }
-
-/* Nav Links - LIST & LI CHANGES */
-.header nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
+/* NOTE: The original header classes are kept for other elements, but the main .header block is obsolete/unnecessary for the new component */
+.staggered-menu-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
 }
 
-.header nav li {
-    position: relative;
-    margin-left: 12px;
+.staggered-menu-wrapper.fixed-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 40;
+  overflow: hidden;
 }
 
-.header nav a {
-    display: block;
-    padding: 8px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.03); 
-    transition: all 0.3s ease;
-    font-weight: 600; 
-    color: var(--text-muted);
+.staggered-menu-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2em;
+  background: transparent;
+  pointer-events: none;
+  z-index: 20;
 }
 
-.header nav a:hover { 
-    background: var(--glass); 
-    transform: translateY(-2px) scale(1.05); 
-    color: var(--accent-3); 
+.staggered-menu-header > * {
+  pointer-events: auto;
 }
 
-.header nav li:hover > a { 
-    background: var(--glass); 
-    color: var(--accent-3);
+.sm-logo {
+  display: flex;
+  align-items: center;
+  user-select: none;
 }
 
-.header nav .simple-link {
-    margin-left: 0;
+.sm-logo-img {
+  display: block;
+  height: 32px;
+  width: auto;
+  object-fit: contain;
 }
 
-/* --- DROPDOWN STYLES --- */
-.header nav .dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
+.sm-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #e9e9ef;
+  font-weight: 500;
+  line-height: 1;
+  overflow: visible;
+}
+
+.sm-toggle:focus-visible {
+  outline: 2px solid #ffffffaa;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.sm-line:last-of-type {
+  margin-top: 6px;
+}
+
+.sm-toggle-textWrap {
+  position: relative;
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  white-space: nowrap;
+  width: var(--sm-toggle-width, auto);
+  min-width: var(--sm-toggle-width, auto);
+}
+
+.sm-toggle-textInner {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.sm-toggle-line {
+  display: block;
+  height: 1em;
+  line-height: 1;
+}
+
+.sm-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.sm-panel-itemWrap {
+  position: relative;
+  overflow: hidden;
+  line-height: 1;
+}
+
+.sm-icon-line {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+.sm-line {
+  display: none !important;
+}
+
+.staggered-menu-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: clamp(260px, 38vw, 420px);
+  height: 100%;
+  background: white;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  padding: 6em 2em 2em 2em;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+[data-position='left'] .staggered-menu-panel {
+  right: auto;
+  left: 0;
+}
+
+.sm-prelayers {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: clamp(260px, 38vw, 420px);
+  pointer-events: none;
+  z-index: 5;
+}
+
+[data-position='left'] .sm-prelayers {
+  right: auto;
+  left: 0;
+}
+
+.sm-prelayer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  transform: translateX(0);
+}
+
+.sm-panel-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sm-socials {
+  margin-top: auto;
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sm-socials-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--sm-accent, #ff0000);
+}
+
+.sm-socials-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sm-socials-list .sm-socials-link {
+  opacity: 1;
+}
+
+.sm-socials-list:hover .sm-socials-link {
+  opacity: 0.35;
+}
+
+.sm-socials-list:hover .sm-socials-link:hover {
+  opacity: 1;
+}
+
+.sm-socials-link:focus-visible {
+  outline: 2px solid var(--sm-accent, #ff0000);
+  outline-offset: 3px;
+}
+
+.sm-socials-list:focus-within .sm-socials-link {
+  opacity: 0.35;
+}
+
+.sm-socials-list:focus-within .sm-socials-link:focus-visible {
+  opacity: 1;
+}
+
+.sm-socials-link {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #111;
+  text-decoration: none;
+  position: relative;
+  padding: 2px 0;
+  display: inline-block;
+  transition:
+    color 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.sm-socials-link:hover {
+  color: var(--sm-accent, #ff0000);
+}
+
+.sm-panel-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.sm-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sm-panel-item {
+  position: relative;
+  color: #000;
+  font-weight: 600;
+  font-size: 3.5rem;
+  cursor: pointer;
+  line-height: 1;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+  transition:
+    background 0.25s,
+    color 0.25s;
+  display: inline-block;
+  text-decoration: none;
+  padding-right: 1.4em;
+}
+
+.staggered-menu-panel .sm-socials-list .sm-socials-link {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.staggered-menu-panel .sm-socials-list:hover .sm-socials-link:not(:hover) {
+  opacity: 0.35;
+}
+
+.staggered-menu-panel .sm-socials-list:focus-within .sm-socials-link:not(:focus-visible) {
+  opacity: 0.35;
+}
+
+.staggered-menu-panel .sm-socials-list .sm-socials-link:hover,
+.staggered-menu-panel .sm-socials-list .sm-socials-link:focus-visible {
+  opacity: 1;
+}
+
+.sm-panel-itemLabel {
+  display: inline-block;
+  will-change: transform;
+  transform-origin: 50% 100%;
+}
+
+.sm-panel-item:hover {
+  color: var(--sm-accent, #5227ff);
+}
+
+.sm-panel-list[data-numbering] {
+  counter-reset: smItem;
+}
+
+.sm-panel-list[data-numbering] .sm-panel-item::after {
+  counter-increment: smItem;
+  content: counter(smItem, decimal-leading-zero);
+  position: absolute;
+  top: 0.1em;
+  right: 2.8em;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--sm-accent, #5227ff);
+  letter-spacing: 0;
+  pointer-events: none;
+  user-select: none;
+  opacity: var(--sm-num-opacity, 0);
+}
+
+@media (max-width: 1024px) {
+  .staggered-menu-panel {
+    width: 100%;
     left: 0;
-    min-width: 180px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(5px);
-    border: 1px solid var(--accent-2);
-    border-radius: var(--radius);
-    padding: 8px 0;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    margin-top: 10px;
-    z-index: 100;
+    right: 0;
+  }
+
+  .staggered-menu-wrapper[data-open] .sm-logo-img {
+    filter: invert(100%);
+  }
 }
 
-.header nav .dropdown li {
-    margin: 0;
-    border: none;
-    text-align: left;
-    padding: 0;
+@media (max-width: 640px) {
+  .staggered-menu-panel {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .staggered-menu-wrapper[data-open] .sm-logo-img {
+    filter: invert(100%);
+  }
 }
-
-.header nav .dropdown li a {
-    padding: 10px 15px;
-    border-radius: 0;
-    border: none;
-    transform: none;
-    color: var(--text-primary);
-    font-weight: 400;
-}
-
-.header nav .dropdown li a:hover {
-    background: var(--accent-2); 
-    color: var(--bg);
-    transform: none;
-}
-
-.header nav li:hover > .dropdown {
-    display: block;
-}
-
-
-/* Minimization */
-.header.minimized { padding: 8px 0; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); }
-.header.minimized .brand { gap: 8px; }
-.header.minimized .logo { width: 40px; height: 40px; font-size: 14px; }
-.header.minimized .subtitle { display: none; }
-.header.minimized h1 { font-size: 1rem; }
-
-/* Mobile Menu */
-.desktop-nav { display: flex; }
-.hamburger { 
-    display: none;
-    background: none; border: none; color: var(--text-primary);
-    font-size: 1.5rem; cursor: pointer; z-index: 101; padding: 10px;
-}
-
-.hamburger .bar {
-    display: block;
-    width: 25px;
-    height: 3px;
-    margin: 5px auto;
-    background-color: var(--text-primary);
-    transition: all 0.3s ease-in-out;
-}
-
-.hamburger.active .bar:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
-.hamburger.active .bar:nth-child(2) { opacity: 0; }
-.hamburger.active .bar:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
-
-.mobile-menu-overlay { 
-    position: fixed;
-    display: none; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(227, 229, 235, 0.95); backdrop-filter: blur(5px); z-index: 99;
-    flex-direction: column; justify-content: center; align-items: center; 
-}
-.mobile-menu-overlay.active { display: flex; }
-.mobile-menu-overlay a { font-size: 1.5rem; font-weight: 600; margin: 15px 0; color: #05080a; }
-
 /* --- Mobile Responsiveness Adjustments (Max-Width 900px) --- */
 @media (max-width: 900px) {
-    .desktop-nav { display: none; }
-    .hamburger { display: block; } 
     .container { padding: 0 20px; }
-    .header .container { padding: 0 20px; }
     .hero { grid-template-columns: 1fr; }
-
-    .desktop-nav .dropdown {
-        display: none !important;
-    }
 }
 
 /* --- PARALLAX STYLES --- */
@@ -290,7 +499,7 @@ a:hover { color: var(--accent-2); }
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -10; /* 🐞 FIX: Changed to an integer (was -10%) */
+    z-index: -10; 
     pointer-events: none;
     overflow: hidden;
 }
@@ -317,7 +526,7 @@ a:hover { color: var(--accent-2); }
     width: 100%;
     height: 117.5%; 
     position: absolute;
-    top: -12%; /* Adjusted from -17.5% for visual centering */
+    top: -12%; 
     left: 0;
     filter: brightness(0.6) grayscale(0.2); 
     opacity: 0.8;
@@ -374,7 +583,6 @@ a:hover { color: var(--accent-2); }
 
 /* --- MAIN LAYOUT & HERO STYLES --- */
 main { padding-top: 40px; }
-/* .main-content-area { padding-top: 100px; } // Removed redundant line */
 
 .card {
     background: linear-gradient(180deg, var(--glass), rgba(248, 246, 246, 0.02));
@@ -421,22 +629,6 @@ main { padding-top: 40px; }
     background: var(--accent-1);
     color: var(--bg);
 }
-
-/* Profile Card Styling */
-.profile-card {
-    background: linear-gradient(180deg, var(--glass-strong), var(--glass));
-    border: 1px solid rgba(255, 255, 255, 0.1); padding: 24px; border-radius: var(--radius);
-    text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-}
-.profile-card img {
-    width: 100%; max-width: 200px; height: auto; border-radius: 50%;
-    border: 4px solid var(--accent-3); box-shadow: 0 0 20px rgba(151, 72, 182, 0.5);
-    transition: transform 0.4s ease, box-shadow 0.4s ease; margin-bottom: 15px;
-}
-.profile-card h3 { font-size: 1.5rem; margin-bottom: 5px; color: var(--accent-2); }
-.profile-card p { color: var(--text-muted); font-size: 0.9rem; }
-.social-links { margin-top: 20px; }
-.social-links a { font-size: 1.5rem; margin: 0 10px; }
 
 /* Featured Projects Section */
 .section-header { text-align: center; margin-top: 150px; margin-bottom: 40px; }
@@ -639,171 +831,714 @@ main { padding-top: 40px; }
         margin: 0 auto 10px;
     }
 }
+/* ---------------------------------------------------- */
+/* --- START REACT CARD CUSTOM CSS (ProfileCard.css)--- */
+/* ---------------------------------------------------- */
+:root {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --pointer-from-center: 0;
+  --pointer-from-top: 0.5;
+  --pointer-from-left: 0.5;
+  --card-opacity: 0;
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  --background-x: 50%;
+  --background-y: 50%;
+  --grain: none;
+  --icon: none;
+  --behind-gradient: none;
+  --inner-gradient: none;
+  --sunpillar-1: hsl(2, 90%, 80%);
+  --sunpillar-2: hsl(53, 88%, 75%);
+  --sunpillar-3: hsl(93, 85%, 74%);
+  --sunpillar-4: hsl(176, 80%, 80%);
+  --sunpillar-5: hsl(228, 90%, 79%);
+  --sunpillar-6: hsl(283, 96%, 81%);
+  --sunpillar-clr-1: var(--sunpillar-1);
+  --sunpillar-clr-2: var(--sunpillar-2);
+  --sunpillar-clr-3: var(--sunpillar-3);
+  --sunpillar-clr-4: var(--sunpillar-4);
+  --sunpillar-clr-5: var(--sunpillar-5);
+  --sunpillar-clr-6: var(--sunpillar-6);
+  --card-radius: 30px;
+}
+
+.pc-card-wrapper {
+  perspective: 500px;
+  transform: translate3d(0, 0, 0.1px);
+  position: relative;
+  touch-action: none;
+}
+
+.pc-card-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  background: inherit;
+  background-position: inherit;
+  border-radius: inherit;
+  transition: all 0.5s ease;
+  filter: contrast(2) saturate(2) blur(36px);
+  transform: scale(0.8) translate3d(0, 0, 0.1px);
+  background-size: 100% 100%;
+  background-image: var(--behind-gradient);
+}
+
+.pc-card-wrapper:hover,
+.pc-card-wrapper.active {
+  --card-opacity: 1;
+}
+
+.pc-card-wrapper:hover::before,
+.pc-card-wrapper.active::before {
+  filter: contrast(1) saturate(2) blur(40px) opacity(1);
+  transform: scale(0.9) translate3d(0, 0, 0.1px);
+}
+
+.pc-card {
+  height: 80svh;
+  max-height: 540px;
+  display: grid;
+  aspect-ratio: 0.718;
+  border-radius: var(--card-radius);
+  position: relative;
+  background-blend-mode: color-dodge, normal, normal, normal;
+  animation: glow-bg 12s linear infinite;
+  box-shadow: rgba(0, 0, 0, 0.8) calc((var(--pointer-from-left) * 10px) - 3px)
+    calc((var(--pointer-from-top) * 20px) - 6px) 20px -5px;
+  transition: transform 1s ease;
+  transform: translate3d(0, 0, 0.1px) rotateX(0deg) rotateY(0deg);
+  background-size: 100% 100%;
+  background-position:
+    0 0,
+    0 0,
+    50% 50%,
+    0 0;
+  background-image:
+    radial-gradient(
+      farthest-side circle at var(--pointer-x) var(--pointer-y),
+      hsla(266, 100%, 90%, var(--card-opacity)) 4%,
+      hsla(266, 50%, 80%, calc(var(--card-opacity) * 0.75)) 10%,
+      hsla(266, 25%, 70%, calc(var(--card-opacity) * 0.5)) 50%,
+      hsla(266, 0%, 60%, 0) 100%
+    ),
+    radial-gradient(35% 52% at 55% 20%, #00ffaac4 0%, #073aff00 100%),
+    radial-gradient(100% 100% at 50% 50%, #00c1ffff 1%, #073aff00 76%),
+    conic-gradient(from 124deg at 50% 50%, #c137ffff 0%, #07c6ffff 40%, #07c6ffff 60%, #c137ffff 100%);
+  overflow: hidden;
+}
+
+.pc-card:hover,
+.pc-card.active {
+  transition: none;
+  transform: translate3d(0, 0, 0.1px) rotateX(var(--rotate-y)) rotateY(var(--rotate-x));
+}
+
+.pc-card * {
+  display: grid;
+  grid-area: 1/-1;
+  border-radius: var(--card-radius);
+  transform: translate3d(0, 0, 0.1px);
+  pointer-events: none;
+}
+
+.pc-inside {
+  inset: 1px;
+  position: absolute;
+  background-image: var(--inner-gradient);
+  background-color: rgba(0, 0, 0, 0.9);
+  transform: translate3d(0, 0, 0.01px);
+}
+
+.pc-shine {
+  mask-image: var(--icon);
+  mask-mode: luminance;
+  mask-repeat: repeat;
+  mask-size: 150%;
+  mask-position: top calc(200% - (var(--background-y) * 5)) left calc(100% - var(--background-x));
+  transition: filter 0.6s ease;
+  filter: brightness(0.66) contrast(1.33) saturate(0.33) opacity(0.5);
+  animation: holo-bg 18s linear infinite;
+  mix-blend-mode: color-dodge;
+}
+
+.pc-shine,
+.pc-shine::after {
+  --space: 5%;
+  --angle: -45deg;
+  transform: translate3d(0, 0, 1px);
+  overflow: hidden;
+  z-index: 3;
+  background: transparent;
+  background-size: cover;
+  background-position: center;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      var(--sunpillar-clr-1) calc(var(--space) * 1),
+      var(--sunpillar-clr-2) calc(var(--space) * 2),
+      var(--sunpillar-clr-3) calc(var(--space) * 3),
+      var(--sunpillar-clr-4) calc(var(--space) * 4),
+      var(--sunpillar-clr-5) calc(var(--space) * 5),
+      var(--sunpillar-clr-6) calc(var(--space) * 6),
+      var(--sunpillar-clr-1) calc(var(--space) * 7)
+    ),
+    repeating-linear-gradient(
+      var(--angle),
+      #0e152e 0%,
+      hsl(180, 10%, 60%) 3.8%,
+      hsl(180, 29%, 66%) 4.5%,
+      hsl(180, 10%, 60%) 5.2%,
+      #0e152e 10%,
+      #0e152e 12%
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(0, 0%, 0%, 0.1) 12%,
+      hsla(0, 0%, 0%, 0.15) 20%,
+      hsla(0, 0%, 0%, 0.25) 120%
+    );
+  background-position:
+    0 var(--background-y),
+    var(--background-x) var(--background-y),
+    center;
+  background-blend-mode: color, hard-light;
+  background-size:
+    500% 500%,
+    300% 300%,
+    200% 200%;
+  background-repeat: repeat;
+}
+
+.pc-shine::before,
+.pc-shine::after {
+  content: '';
+  background-position: center;
+  background-size: cover;
+  grid-area: 1/1;
+  opacity: 0;
+}
+
+.pc-card:hover .pc-shine,
+.pc-card.active .pc-shine {
+  filter: brightness(0.85) contrast(1.5) saturate(0.5);
+  animation: none;
+}
+
+.pc-card:hover .pc-shine::before,
+.pc-card.active .pc-shine::before,
+.pc-card:hover .pc-shine::after,
+.pc-card.active .pc-shine::after {
+  opacity: 1;
+}
+
+.pc-shine::before {
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--sunpillar-4),
+      var(--sunpillar-5),
+      var(--sunpillar-6),
+      var(--sunpillar-1),
+      var(--sunpillar-2),
+      var(--sunpillar-3)
+    ),
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), hsl(0, 0%, 70%) 0%, hsla(0, 0%, 30%, 0.2) 90%),
+    var(--grain);
+  background-size:
+    250% 250%,
+    100% 100%,
+    220px 220px;
+  background-position:
+    var(--pointer-x) var(--pointer-y),
+    center,
+    calc(var(--pointer-x) * 0.01) calc(var(--pointer-y) * 0.01);
+  background-blend-mode: color-dodge;
+  filter: brightness(calc(2 - var(--pointer-from-center))) contrast(calc(var(--pointer-from-center) + 2))
+    saturate(calc(0.5 + var(--pointer-from-center)));
+  mix-blend-mode: luminosity;
+}
+
+.pc-shine::after {
+  background-position:
+    0 var(--background-y),
+    calc(var(--background-x) * 0.4) calc(var(--background-y) * 0.5),
+    center;
+  background-size:
+    200% 300%,
+    700% 700%,
+    100% 100%;
+  mix-blend-mode: difference;
+  filter: brightness(0.8) contrast(1.5);
+}
+
+.pc-glare {
+  transform: translate3d(0, 0, 1.1px);
+  overflow: hidden;
+  background-image: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsl(248, 25%, 80%) 12%,
+    hsla(207, 40%, 30%, 0.8) 90%
+  );
+  mix-blend-mode: overlay;
+  filter: brightness(0.8) contrast(1.2);
+  z-index: 4;
+}
+
+.pc-avatar-content {
+  mix-blend-mode: screen;
+  overflow: hidden;
+}
+
+.pc-avatar-content .avatar {
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scale(1);
+  bottom: 2px;
+  opacity: calc(1.75 - var(--pointer-from-center));
+}
+
+.pc-avatar-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  backdrop-filter: blur(30px);
+  mask: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(0, 0, 0, 1) 90%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  pointer-events: none;
+}
+
+.pc-user-info {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 12px 14px;
+  pointer-events: auto;
+}
+
+.pc-user-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pc-mini-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.pc-mini-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.pc-user-text {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pc-handle {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1;
+}
+
+.pc-status {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1;
+}
+
+.pc-contact-btn {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.pc-contact-btn:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+.pc-content {
+  max-height: 100%;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+  transform: translate3d(
+    calc(var(--pointer-from-left) * -6px + 3px),
+    calc(var(--pointer-from-top) * -6px + 3px),
+    0.1px
+  ) !important;
+  z-index: 5;
+  mix-blend-mode: luminosity;
+}
+
+.pc-details {
+  width: 100%;
+  position: absolute;
+  top: 3em;
+  display: flex;
+  flex-direction: column;
+}
+
+.pc-details h3 {
+  font-weight: 600;
+  margin: 0;
+  font-size: min(5svh, 3em);
+  margin: 0;
+  background-image: linear-gradient(to bottom, #fff, #6f6fbe);
+  background-size: 1em 1.5em;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.pc-details p {
+  font-weight: 600;
+  position: relative;
+  top: -12px;
+  white-space: nowrap;
+  font-size: 16px;
+  margin: 0 auto;
+  width: min-content;
+  background-image: linear-gradient(to bottom, #fff, #4a4ac0);
+  background-size: 1em 1.5em;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+@keyframes glow-bg {
+  0% {
+    --bgrotate: 0deg;
+  }
+
+  100% {
+    --bgrotate: 360deg;
+  }
+}
+
+@keyframes holo-bg {
+  0% {
+    background-position:
+      0 var(--background-y),
+      0 0,
+      center;
+  }
+
+  100% {
+    background-position:
+      0 var(--background-y),
+      90% 90%,
+      center;
+  }
+}
+
+@media (max-width: 768px) {
+  .pc-card {
+    height: 70svh;
+    max-height: 450px;
+  }
+
+  .pc-details {
+    top: 2em;
+  }
+
+  .pc-details h3 {
+    font-size: min(4svh, 2.5em);
+  }
+
+  .pc-details p {
+    font-size: 14px;
+  }
+
+  .pc-user-info {
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    padding: 10px 12px;
+  }
+
+  .pc-mini-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .pc-user-details {
+    gap: 10px;
+  }
+
+  .pc-handle {
+    font-size: 13px;
+  }
+
+  .pc-status {
+    font-size: 10px;
+  }
+
+  .pc-contact-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pc-card {
+    height: 60svh;
+    max-height: 380px;
+  }
+
+  .pc-details {
+    top: 1.5em;
+  }
+
+  .pc-details h3 {
+    font-size: min(3.5svh, 2em);
+  }
+
+  .pc-details p {
+    font-size: 12px;
+    top: -8px;
+  }
+
+  .pc-user-info {
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    padding: 8px 10px;
+    border-radius: 50px;
+  }
+
+  .pc-mini-avatar {
+    width: 24px;
+    height: 24px;
+  }
+
+  .pc-user-details {
+    gap: 8px;
+  }
+
+  .pc-handle {
+    font-size: 12px;
+  }
+
+  .pc-status {
+    font-size: 9px;
+  }
+
+  .pc-contact-btn {
+    padding: 5px 10px;
+    font-size: 10px;
+    border-radius: 50px;
+  }
+}
+
+@media (max-width: 320px) {
+  .pc-card {
+    height: 55svh;
+    max-height: 320px;
+  }
+
+  .pc-details h3 {
+    font-size: min(3svh, 1.5em);
+  }
+
+  .pc-details p {
+    font-size: 11px;
+  }
+
+  .pc-user-info {
+    padding: 6px 8px;
+    border-radius: 50px;
+  }
+
+  .pc-mini-avatar {
+    width: 20px;
+    height: 20px;
+  }
+
+  .pc-user-details {
+    gap: 6px;
+  }
+
+  .pc-handle {
+    font-size: 11px;
+  }
+
+  .pc-status {
+    font-size: 8px;
+  }
+
+  .pc-contact-btn {
+    padding: 4px 8px;
+    font-size: 9px;
+    border-radius: 50px;
+  }
+}
+/* ---------------------------------------------------- */
+/* --- END REACT CARD CUSTOM CSS (ProfileCard.css)--- */
+/* ---------------------------------------------------- */
+
+
+/* ---------------------------------------------------- */
+/* 🚨 STEP 1: PASTE StaggeredMenu.css STYLES HERE 🚨 */
+/* ---------------------------------------------------- */
+/* You need to manually paste the CSS for the Staggered Menu component here. 
+    It will start with classes like: 
+    .staggered-menu-wrapper { ... }
+    .staggered-menu-header { ... }
+    .sm-toggle { ... }
+*/
+
     </style>
 </head>
 <body>
 <div id="full-page-parallax">
-        <div class="parallax__visuals">
-            <div data-parallax-layers class="parallax__layers">
-                <img src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795be09b462b2e8ebf71_osmo-parallax-layer-3.webp" loading="eager" width="800" data-parallax-layer="1" alt="Far background layer of futuristic city" class="parallax__layer-img">
-                <img src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795b4d5ac529e7d3a562_osmo-parallax-layer-2.webp" loading="eager" width="800" data-parallax-layer="2" alt="Middle background layer of futuristic buildings" class="parallax__layer-img">
-                <div data-parallax-layer="3" class="parallax__layer-title" style="display: none;"></div> 
-                <img src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795bb5aceca85011ad83_osmo-parallax-layer-1.webp" loading="eager" width="800" data-parallax-layer="4" alt="Closest foreground element" class="parallax__layer-img">
-            </div>
+    <div class="parallax__visuals">
+        <div data-parallax-layers class="parallax__layers">
+            <img src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795be09b462b2e8ebf71_osmo-parallax-layer-3.webp" loading="eager" width="800" data-parallax-layer="1" alt="Far background layer of futuristic city" class="parallax__layer-img">
+            <img src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795b4d5ac529e7d3a562_osmo-parallax-layer-2.webp" loading="eager" width="800" data-parallax-layer="2" alt="Middle background layer of futuristic buildings" class="parallax__layer-img">
+            <div data-parallax-layer="3" class="parallax__layer-title" style="display: none;"></div> 
+            <img src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795bb5aceca85011ad83_osmo-parallax-layer-1.webp" loading="eager" width="800" data-parallax-layer="4" alt="Closest foreground element" class="parallax__layer-img">
         </div>
     </div>
-    <div id="loader-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease; opacity: 0;">
-        <div style="display: flex;">
-            <span style="width: 15px; height: 15px; margin: 0 5px; background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); border-radius: 50%; animation: bounce 0.8s infinite ease-in-out; box-shadow: 0 0 10px rgba(106, 90, 205, 0.6);"></span>
-            <span style="width: 15px; height: 15px; margin: 0 5px; background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); border-radius: 50%; animation: bounce 0.8s infinite ease-in-out 0.15s; box-shadow: 0 0 10px rgba(106, 90, 205, 0.6);"></span>
-            <span style="width: 15px; height: 15px; margin: 0 5px; background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); border-radius: 50%; animation: bounce 0.8s infinite ease-in-out 0.3s; box-shadow: 0 0 10px rgba(106, 90, 205, 0.6);"></span>
-        </div>
-    
-        <div style="margin-top: 20px; font-size: 1.25rem; font-weight: 600; color: rgba(255, 255, 255, 0.8); letter-spacing: 2px; animation: pulse-text 1.5s ease-in-out infinite;">Building...</div>
+</div>
+<div id="loader-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease; opacity: 0;">
+    <div style="display: flex;">
+        <span style="width: 15px; height: 15px; margin: 0 5px; background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); border-radius: 50%; animation: bounce 0.8s infinite ease-in-out; box-shadow: 0 0 10px rgba(106, 90, 205, 0.6);"></span>
+        <span style="width: 15px; height: 15px; margin: 0 5px; background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); border-radius: 50%; animation: bounce 0.8s infinite ease-in-out 0.15s; box-shadow: 0 0 10px rgba(106, 90, 205, 0.6);"></span>
+        <span style="width: 15px; height: 15px; margin: 0 5px; background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); border-radius: 50%; animation: bounce 0.8s infinite ease-in-out 0.3s; box-shadow: 0 0 10px rgba(106, 90, 205, 0.6);"></span>
     </div>
-    <style>
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
-        @keyframes pulse-text { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
-    </style>
-    
-    <header class="header" id="mainHeader">
-        <div class="container">
-            <div class="brand">
-                <div class="logo">HA</div>
-                <div>
-                    <h1>HM Hisham Ahmed</h1>
-                    <p class="subtitle">Frontend Engineer</p>
-                </div>
-            </div>
-            
-            <nav class="desktop-nav">
-                <ul>
-                    <li class="simple-link"><a href="index.html" class="active">Home</a></li>
-                    <li class="simple-link"><a href="project.html">Projects</a></li>
-                    
-                    <li>
-                        <a href="aboutme.html">About me <i class="fa-solid fa-caret-down" style="font-size: 0.8em; margin-left: 5px;"></i></a>
-                        <ul class="dropdown">
-                            <li><a href="aboutme.html">My Story / Background</a></li>
-                            <li><a href="blog.html">Blog & Insights</a></li>
-                            <li><a href="resume.pdf" target="_blank">View Resume</a></li>
-                        </ul>
-                    </li>
-                    <li class="simple-link"><a href="contact.html">Contact</a></li>
-                </ul>
-            </nav>
 
-            <button class="hamburger" id="hamburgerMenu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
+    <div style="margin-top: 20px; font-size: 1.25rem; font-weight: 600; color: rgba(255, 255, 255, 0.8); letter-spacing: 2px; animation: pulse-text 1.5s ease-in-out infinite;">Building...</div>
+</div>
+<style>
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
+    @keyframes pulse-text { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
+</style>
+
+<div id="react-header-container"></div>
+
+<section class="parallax__page-content container">
+    <h2 class="parallax__title">HISHAM AHMED</h2>
+    <div class="parallax__fade"></div>
+</section>
+
+<main class="main-content-area">
+    <section class="hero container">
+        <div class="hero-content">
+            <h2 class="hero-title">Building High-Performance Digital Experiences.</h2>
+            <p class="hero-subtitle">
+                I'm a **Frontend Engineer** specializing in modern JavaScript frameworks (React/Next.js), high-performance optimization, and building design-centric, accessible web applications.
+            </p>
+            <a href="project.html" class="cta-button">
+                View My Case Studies <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+        </div>
+
+        <aside class="profile-card" id="react-profile-card-container">
+        </aside>
+    </section>
+
+    <section class="why-choose-me container">
+        <h2>Why Choose Me?</h2>
+        <p style="margin-top:8px;color:var(--muted);font-size:1rem;">A peek into my work philosophy and technical approach.</p>
+        <div class="why-choose-me-grid">
+            <article class="reason-card">
+                <div class="icon"><i class="fa-solid fa-code"></i></div>
+                <h3>Clean & Readable Code</h3>
+                <p>I prioritize well-documented, modular code that's easy to maintain and scale. My projects are designed with future developers in mind.</p>
+            </article>
+            <article class="reason-card">
+                <div class="icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <h3>Modern Aesthetics</h3>
+                <p>I build websites that are not only functional but also visually stunning. My designs are inspired by modern trends and user-centric principles.</p>
+            </article>
+            <article class="reason-card">
+                <div class="icon"><i class="fa-solid fa-rocket"></i></div>
+                <h3>Performance-Focused</h3>
+                <p>I optimize every aspect of a site for speed, from code bundling to efficient asset loading, ensuring a fast and smooth experience for all users.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="section-header">
+            <h2>Featured Projects</h2>
+            <p>A curated selection of my best work demonstrating technical depth.</p>
+        </div>
+
+        <div class="project-grid">
+            
+            <a href="project.html#project-1" class="project-card">
+                <div class="project-details">
+                    <h3>E-commerce Data Dashboard</h3>
+                    <div class="tags"><span>#React</span> <span>#Node.js</span> <span>#D3.js</span></div>
+                    <p>Built a real-time analytics dashboard to track user behavior and sales funnel performance. Achieved 95% Lighthouse score.</p>
+                    <span class="view-link">View Case Study &rarr;</span>
+                </div>
+            </a>
+
+            <a href="project.html#project-2" class="project-card">
+                <div class="project-details">
+                    <h3>Interactive 3D Product Viewer</h3>
+                    <div class="tags"><span>#Three.js</span> <span>#WebGL</span> <span>#React-Fiber</span></div>
+                    <p>Developed a high-fidelity 3D model viewer with custom shaders and camera controls, targeting mobile performance.</p>
+                    <span class="view-link">View Case Study &rarr;</span>
+                </div>
+            </a>
+
+            <a href="project.html#project-3" class="project-card">
+                <div class="project-details">
+                    <h3>AI-Powered Content Generator</h3>
+                    <div class="tags"><span>#Next.js</span> <span>#OpenAI</span> <span>#Python</span></div>
+                    <p>Full-stack application utilizing serverless functions to generate and optimize blog content based on user prompts.</p>
+                    <span class="view-link">View Case Study &rarr;</span>
+                </div>
+            </a>
+
         </div>
         
-        <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-            <a href="index.html" class="active">Home</a>
-            <a href="project.html">Projects</a>
-            <a href="aboutme.html">About me</a>
-            <a href="blog.html">Blog</a>
-            <a href="contact.html">Contact</a>
-        </div>
-    </header>
-
-  <section class="parallax__page-content container">
-            <h2 class="parallax__title">HISHAM AHMED</h2>
-            <div class="parallax__fade"></div>
-        </section>
-
-    <main class="main-content-area">
-        <section class="hero container">
-            <div class="hero-content">
-                <h2 class="hero-title">Building High-Performance Digital Experiences.</h2>
-                <p class="hero-subtitle">
-                    I'm a **Frontend Engineer** specializing in modern JavaScript frameworks (React/Next.js), high-performance optimization, and building design-centric, accessible web applications.
-                </p>
-                <a href="project.html" class="cta-button">
-                    View My Case Studies <i class="fa-solid fa-arrow-right-long"></i>
-                </a>
-            </div>
-
-            <aside class="profile-card">
-                <img class="profile-image" src="mywebiste\proflie image.png" alt="Professional portrait of Hisham Ahmed">
-                <h3>Hisham Ahmed</h3>
-                <p>Frontend Engineer & WebGL Enthusiast</p>
-                
-                <div class="social-links">
-                    <a href="https://github.com/hishamahmed01" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/hisham-ahmed-1378a9367/?skipRedirect=true" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                    <a href="hm.hishamahmed@gmail.com" target="_blank" title="Email"><i class="fa-solid fa-envelope"></i></a>
-                </div>
-            </aside>
-        </section>
-
-        <section class="why-choose-me container">
-            <h2>Why Choose Me?</h2>
-            <p style="margin-top:8px;color:var(--muted);font-size:1rem;">A peek into my work philosophy and technical approach.</p>
-            <div class="why-choose-me-grid">
-                <article class="reason-card">
-                    <div class="icon"><i class="fa-solid fa-code"></i></div>
-                    <h3>Clean & Readable Code</h3>
-                    <p>I prioritize well-documented, modular code that's easy to maintain and scale. My projects are designed with future developers in mind.</p>
-                </article>
-                <article class="reason-card">
-                    <div class="icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                    <h3>Modern Aesthetics</h3>
-                    <p>I build websites that are not only functional but also visually stunning. My designs are inspired by modern trends and user-centric principles.</p>
-                </article>
-                <article class="reason-card">
-                    <div class="icon"><i class="fa-solid fa-rocket"></i></div>
-                    <h3>Performance-Focused</h3>
-                    <p>I optimize every aspect of a site for speed, from code bundling to efficient asset loading, ensuring a fast and smooth experience for all users.</p>
-                </article>
-            </div>
-        </section>
-
-        <section class="container">
-            <div class="section-header">
-                <h2>Featured Projects</h2>
-                <p>A curated selection of my best work demonstrating technical depth.</p>
-            </div>
-
-            <div class="project-grid">
-                
-                <a href="project.html#project-1" class="project-card">
-                    <div class="project-details">
-                        <h3>E-commerce Data Dashboard</h3>
-                        <div class="tags"><span>#React</span> <span>#Node.js</span> <span>#D3.js</span></div>
-                        <p>Built a real-time analytics dashboard to track user behavior and sales funnel performance. Achieved 95% Lighthouse score.</p>
-                        <span class="view-link">View Case Study &rarr;</span>
-                    </div>
-                </a>
-
-                <a href="project.html#project-2" class="project-card">
-                    <div class="project-details">
-                        <h3>Interactive 3D Product Viewer</h3>
-                        <div class="tags"><span>#Three.js</span> <span>#WebGL</span> <span>#React-Fiber</span></div>
-                        <p>Developed a high-fidelity 3D model viewer with custom shaders and camera controls, targeting mobile performance.</p>
-                        <span class="view-link">View Case Study &rarr;</span>
-                    </div>
-                </a>
-
-                <a href="project.html#project-3" class="project-card">
-                    <div class="project-details">
-                        <h3>AI-Powered Content Generator</h3>
-                        <div class="tags"><span>#Next.js</span> <span>#OpenAI</span> <span>#Python</span></div>
-                        <p>Full-stack application utilizing serverless functions to generate and optimize blog content based on user prompts.</p>
-                        <span class="view-link">View Case Study &rarr;</span>
-                    </div>
-                </a>
-
-            </div>
-            
-            <p style="text-align: center; margin-top: 80px;">
-                <a href="project.html" class="cta-button" style="background: none; border: 1px solid var(--accent-2); box-shadow: none; text-transform: none; letter-spacing: 0;">
-                    See All 8 Projects <i class="fa-solid fa-up-right-from-square"></i>
-                </a>
-            </p>
-        </section>
+        <p style="text-align: center; margin-top: 80px;">
+            <a href="project.html" class="cta-button" style="background: none; border: 1px solid var(--accent-2); box-shadow: none; text-transform: none; letter-spacing: 0;">
+                See All 8 Projects <i class="fa-solid fa-up-right-from-square"></i>
+            </a>
+        </p>
+    </section>
 
 
     <section class="container">
@@ -817,7 +1552,7 @@ main { padding-top: 40px; }
             </a>
         </div>
     </section>
-    </main>
+</main>
 <footer class="footer">
     <div class="container">
         <div class="footer-grid">
@@ -880,114 +1615,901 @@ main { padding-top: 40px; }
     </div>
 </footer>
 
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
-    <script>
-    // Variable Declarations
-const header = document.getElementById('mainHeader');
-const hamburgerMenu = document.getElementById('hamburgerMenu');
-const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-const loaderOverlay = document.getElementById('loader-overlay');
+<script type="text/babel">
+    const DEFAULT_BEHIND_GRADIENT =
+        'radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(266,100%,90%,var(--card-opacity)) 4%,hsla(266,50%,80%,calc(var(--card-opacity)*0.75)) 10%,hsla(266,25%,70%,calc(var(--card-opacity)*0.5)) 50%,hsla(266,0%,60%,0) 100%),radial-gradient(35% 52% at 55% 20%,#00ffaac4 0%,#073aff00 100%),radial-gradient(100% 100% at 50% 50%,#00c1ffff 1%,#073aff00 76%),conic-gradient(from 124deg at 50% 50%,#c137ffff 0%,#07c6ffff 40%,#07c6ffff 60%,#c137ffff 100%)';
 
-// Get Current Year for Footer
-document.getElementById('currentYear').textContent = new Date().getFullYear();
+    const DEFAULT_INNER_GRADIENT = 'linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)';
 
-// ------------------------------------------
-// 🟢 LENIS + GSAP SCROLLTRIGGER INTEGRATION (Core Bridge)
-// ------------------------------------------
+    const ANIMATION_CONFIG = {
+        SMOOTH_DURATION: 600,
+        INITIAL_DURATION: 1500,
+        INITIAL_X_OFFSET: 70,
+        INITIAL_Y_OFFSET: 60,
+        DEVICE_BETA_OFFSET: 20
+    };
 
-const lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
-    smoothTouch: false,
-});
+    const clamp = (value, min = 0, max = 100) => Math.min(Math.max(value, min), max);
 
-gsap.registerPlugin(ScrollTrigger);
-lenis.on('scroll', ScrollTrigger.update); 
-gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-});
-gsap.ticker.lagSmoothing(0); 
+    const round = (value, precision = 3) => parseFloat(value.toFixed(precision));
 
-// ------------------------------------------
-// 🌟 FULL PAGE PARALLAX ANIMATION (GSAP)
-// ------------------------------------------
+    const adjust = (value, fromMin, fromMax, toMin, toMax) =>
+        round(toMin + ((toMax - toMin) * (value - fromMin)) / (fromMax - fromMin));
 
-document.addEventListener("DOMContentLoaded", () => {
-    const triggerElement = document.querySelector('#full-page-parallax [data-parallax-layers]');
-    
-    if (triggerElement) {
-        let tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: document.body, 
-                start: "top top",
-                end: "bottom top", 
-                scrub: true
+    const easeInOutCubic = x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+
+    // ==========================================================
+    // ⭐️ STAGGERED MENU COMPONENT (PASTED) ⭐️
+    // ==========================================================
+    const { useState, useCallback, useLayoutEffect, useRef, useMemo, useEffect } = React;
+
+    const StaggeredMenu = ({
+        position = 'right',
+        colors = ['#B19EEF', '#5227FF'],
+        items = [],
+        socialItems = [],
+        displaySocials = true,
+        displayItemNumbering = true,
+        className,
+        logoUrl = '/src/assets/logos/reactbits-gh-white.svg',
+        menuButtonColor = '#fff',
+        openMenuButtonColor = '#fff',
+        accentColor = '#5227FF',
+        changeMenuColorOnOpen = true,
+        isFixed = false,
+        onMenuOpen,
+        onMenuClose
+    }) => {
+        const [open, setOpen] = useState(false);
+        const openRef = useRef(false);
+        const panelRef = useRef(null);
+        const preLayersRef = useRef(null);
+        const preLayerElsRef = useRef([]);
+        const plusHRef = useRef(null);
+        const plusVRef = useRef(null);
+        const iconRef = useRef(null);
+        const textInnerRef = useRef(null);
+        const textWrapRef = useRef(null);
+        const [textLines, setTextLines] = useState(['Menu', 'Close']);
+
+        const openTlRef = useRef(null);
+        const closeTweenRef = useRef(null);
+        const spinTweenRef = useRef(null);
+        const textCycleAnimRef = useRef(null);
+        const colorTweenRef = useRef(null);
+        const toggleBtnRef = useRef(null);
+        const busyRef = useRef(false);
+        const itemEntranceTweenRef = useRef(null);
+
+        useLayoutEffect(() => {
+            const ctx = gsap.context(() => {
+                const panel = panelRef.current;
+                const preContainer = preLayersRef.current;
+                const plusH = plusHRef.current;
+                const plusV = plusVRef.current;
+                const icon = iconRef.current;
+                const textInner = textInnerRef.current;
+                if (!panel || !plusH || !plusV || !icon || !textInner) return;
+
+                let preLayers = [];
+                if (preContainer) {
+                    preLayers = Array.from(preContainer.querySelectorAll('.sm-prelayer'));
+                }
+                preLayerElsRef.current = preLayers;
+
+                const offscreen = position === 'left' ? -100 : 100;
+                gsap.set([panel, ...preLayers], { xPercent: offscreen });
+                gsap.set(plusH, { transformOrigin: '50% 50%', rotate: 0 });
+                gsap.set(plusV, { transformOrigin: '50% 50%', rotate: 90 });
+                gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
+                gsap.set(textInner, { yPercent: 0 });
+                if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
+            });
+            return () => ctx.revert();
+        }, [menuButtonColor, position]);
+
+        const buildOpenTimeline = useCallback(() => {
+            const panel = panelRef.current;
+            const layers = preLayerElsRef.current;
+            if (!panel) return null;
+
+            openTlRef.current?.kill();
+            if (closeTweenRef.current) {
+                closeTweenRef.current.kill();
+                closeTweenRef.current = null;
             }
-        });
-        
-        // 🐞 FIX: Removed layer 3 as it was an empty non-image div.
-        const layers = [
-            { layer: "1", yMovement: '70vh' }, 
-            { layer: "2", yMovement: '55vh' }, 
-            { layer: "4", yMovement: '10vh' } 
-        ];
-        
-        layers.forEach((layerObj) => {
-            tl.to(
-                triggerElement.querySelectorAll(`[data-parallax-layer="${layerObj.layer}"]`),
-                {
-                    y: layerObj.yMovement, 
-                    ease: "none"
-                },
-                0 
+            itemEntranceTweenRef.current?.kill();
+
+            const itemEls = Array.from(panel.querySelectorAll('.sm-panel-itemLabel'));
+            const numberEls = Array.from(panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item'));
+            const socialTitle = panel.querySelector('.sm-socials-title');
+            const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link'));
+
+            const layerStates = layers.map(el => ({ el, start: Number(gsap.getProperty(el, 'xPercent')) }));
+            const panelStart = Number(gsap.getProperty(panel, 'xPercent'));
+
+            if (itemEls.length) {
+                gsap.set(itemEls, { yPercent: 140, rotate: 10 });
+            }
+            if (numberEls.length) {
+                gsap.set(numberEls, { '--sm-num-opacity': 0 });
+            }
+            if (socialTitle) {
+                gsap.set(socialTitle, { opacity: 0 });
+            }
+            if (socialLinks.length) {
+                gsap.set(socialLinks, { y: 25, opacity: 0 });
+            }
+
+            const tl = gsap.timeline({ paused: true });
+
+            layerStates.forEach((ls, i) => {
+                tl.fromTo(ls.el, { xPercent: ls.start }, { xPercent: 0, duration: 0.5, ease: 'power4.out' }, i * 0.07);
+            });
+            const lastTime = layerStates.length ? (layerStates.length - 1) * 0.07 : 0;
+            const panelInsertTime = lastTime + (layerStates.length ? 0.08 : 0);
+            const panelDuration = 0.65;
+            tl.fromTo(
+                panel,
+                { xPercent: panelStart },
+                { xPercent: 0, duration: panelDuration, ease: 'power4.out' },
+                panelInsertTime
             );
-        });
+
+            if (itemEls.length) {
+                const itemsStartRatio = 0.15;
+                const itemsStart = panelInsertTime + panelDuration * itemsStartRatio;
+                tl.to(
+                    itemEls,
+                    {
+                        yPercent: 0,
+                        rotate: 0,
+                        duration: 1,
+                        ease: 'power4.out',
+                        stagger: { each: 0.1, from: 'start' }
+                    },
+                    itemsStart
+                );
+                if (numberEls.length) {
+                    tl.to(
+                        numberEls,
+                        {
+                            duration: 0.6,
+                            ease: 'power2.out',
+                            '--sm-num-opacity': 1,
+                            stagger: { each: 0.08, from: 'start' }
+                        },
+                        itemsStart + 0.1
+                    );
+                }
+            }
+
+            if (socialTitle || socialLinks.length) {
+                const socialsStart = panelInsertTime + panelDuration * 0.4;
+                if (socialTitle) {
+                    tl.to(
+                        socialTitle,
+                        {
+                            opacity: 1,
+                            duration: 0.5,
+                            ease: 'power2.out'
+                        },
+                        socialsStart
+                    );
+                }
+                if (socialLinks.length) {
+                    tl.to(
+                        socialLinks,
+                        {
+                            y: 0,
+                            opacity: 1,
+                            duration: 0.55,
+                            ease: 'power3.out',
+                            stagger: { each: 0.08, from: 'start' },
+                            onComplete: () => {
+                                gsap.set(socialLinks, { clearProps: 'opacity' });
+                            }
+                        },
+                        socialsStart + 0.04
+                    );
+                }
+            }
+
+            openTlRef.current = tl;
+            return tl;
+        }, []);
+
+        const playOpen = useCallback(() => {
+            if (busyRef.current) return;
+            busyRef.current = true;
+            const tl = buildOpenTimeline();
+            if (tl) {
+                tl.eventCallback('onComplete', () => {
+                    busyRef.current = false;
+                });
+                tl.play(0);
+            } else {
+                busyRef.current = false;
+            }
+        }, [buildOpenTimeline]);
+
+        const playClose = useCallback(() => {
+            openTlRef.current?.kill();
+            openTlRef.current = null;
+            itemEntranceTweenRef.current?.kill();
+
+            const panel = panelRef.current;
+            const layers = preLayerElsRef.current;
+            if (!panel) return;
+
+            const all = [...layers, panel];
+            closeTweenRef.current?.kill();
+            const offscreen = position === 'left' ? -100 : 100;
+            closeTweenRef.current = gsap.to(all, {
+                xPercent: offscreen,
+                duration: 0.32,
+                ease: 'power3.in',
+                overwrite: 'auto',
+                onComplete: () => {
+                    const itemEls = Array.from(panel.querySelectorAll('.sm-panel-itemLabel'));
+                    if (itemEls.length) {
+                        gsap.set(itemEls, { yPercent: 140, rotate: 10 });
+                    }
+                    const numberEls = Array.from(panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item'));
+                    if (numberEls.length) {
+                        gsap.set(numberEls, { '--sm-num-opacity': 0 });
+                    }
+                    const socialTitle = panel.querySelector('.sm-socials-title');
+                    const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link'));
+                    if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
+                    if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
+                    busyRef.current = false;
+                }
+            });
+        }, [position]);
+
+        const animateIcon = useCallback(opening => {
+            const icon = iconRef.current;
+            if (!icon) return;
+            spinTweenRef.current?.kill();
+            if (opening) {
+                spinTweenRef.current = gsap.to(icon, { rotate: 225, duration: 0.8, ease: 'power4.out', overwrite: 'auto' });
+            } else {
+                spinTweenRef.current = gsap.to(icon, { rotate: 0, duration: 0.35, ease: 'power3.inOut', overwrite: 'auto' });
+            }
+        }, []);
+
+        const animateColor = useCallback(
+            opening => {
+                const btn = toggleBtnRef.current;
+                if (!btn) return;
+                colorTweenRef.current?.kill();
+                if (changeMenuColorOnOpen) {
+                    const targetColor = opening ? openMenuButtonColor : menuButtonColor;
+                    colorTweenRef.current = gsap.to(btn, {
+                        color: targetColor,
+                        delay: 0.18,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                } else {
+                    gsap.set(btn, { color: menuButtonColor });
+                }
+            },
+            [openMenuButtonColor, menuButtonColor, changeMenuColorOnOpen]
+        );
+
+        useEffect(() => {
+            if (toggleBtnRef.current) {
+                if (changeMenuColorOnOpen) {
+                    const targetColor = openRef.current ? openMenuButtonColor : menuButtonColor;
+                    gsap.set(toggleBtnRef.current, { color: targetColor });
+                } else {
+                    gsap.set(toggleBtnRef.current, { color: menuButtonColor });
+                }
+            }
+        }, [changeMenuColorOnOpen, menuButtonColor, openMenuButtonColor]);
+
+        const animateText = useCallback(opening => {
+            const inner = textInnerRef.current;
+            if (!inner) return;
+            textCycleAnimRef.current?.kill();
+
+            const currentLabel = opening ? 'Menu' : 'Close';
+            const targetLabel = opening ? 'Close' : 'Menu';
+            const cycles = 3;
+            const seq = [currentLabel];
+            let last = currentLabel;
+            for (let i = 0; i < cycles; i++) {
+                last = last === 'Menu' ? 'Close' : 'Menu';
+                seq.push(last);
+            }
+            if (last !== targetLabel) seq.push(targetLabel);
+            seq.push(targetLabel);
+            setTextLines(seq);
+
+            gsap.set(inner, { yPercent: 0 });
+            const lineCount = seq.length;
+            const finalShift = ((lineCount - 1) / lineCount) * 100;
+            textCycleAnimRef.current = gsap.to(inner, {
+                yPercent: -finalShift,
+                duration: 0.5 + lineCount * 0.07,
+                ease: 'power4.out'
+            });
+        }, []);
+
+        const toggleMenu = useCallback(() => {
+            const target = !openRef.current;
+            openRef.current = target;
+            setOpen(target);
+            if (target) {
+                onMenuOpen?.();
+                playOpen();
+            } else {
+                onMenuClose?.();
+                playClose();
+            }
+            animateIcon(target);
+            animateColor(target);
+            animateText(target);
+        }, [playOpen, playClose, animateIcon, animateColor, animateText, onMenuOpen, onMenuClose]);
+
+        return (
+            <div
+                className={(className ? className + ' ' : '') + 'staggered-menu-wrapper' + (isFixed ? ' fixed-wrapper' : '')}
+                style={accentColor ? { ['--sm-accent']: accentColor } : undefined}
+                data-position={position}
+                data-open={open || undefined}
+            >
+                <div ref={preLayersRef} className="sm-prelayers" aria-hidden="true">
+                    {(() => {
+                        const raw = colors && colors.length ? colors.slice(0, 4) : ['#1e1e22', '#35353c'];
+                        let arr = [...raw];
+                        if (arr.length >= 3) {
+                            const mid = Math.floor(arr.length / 2);
+                            arr.splice(mid, 1);
+                        }
+                        return arr.map((c, i) => <div key={i} className="sm-prelayer" style={{ background: c }} />);
+                    })()}
+                </div>
+                <header className="staggered-menu-header" aria-label="Main navigation header">
+                    <div className="sm-logo" aria-label="Logo">
+                        <img
+                            src={logoUrl || 'mywebiste/proflie image.png'}
+                            alt="Logo"
+                            className="sm-logo-img"
+                            draggable={false}
+                            width={110}
+                            height={24}
+                        />
+                    </div>
+                    <button
+                        ref={toggleBtnRef}
+                        className="sm-toggle"
+                        aria-label={open ? 'Close menu' : 'Open menu'}
+                        aria-expanded={open}
+                        aria-controls="staggered-menu-panel"
+                        onClick={toggleMenu}
+                        type="button"
+                    >
+                        <span ref={textWrapRef} className="sm-toggle-textWrap" aria-hidden="true">
+                            <span ref={textInnerRef} className="sm-toggle-textInner">
+                                {textLines.map((l, i) => (
+                                    <span className="sm-toggle-line" key={i}>
+                                        {l}
+                                    </span>
+                                ))}
+                            </span>
+                        </span>
+                        <span ref={iconRef} className="sm-icon" aria-hidden="true">
+                            <span ref={plusHRef} className="sm-icon-line" />
+                            <span ref={plusVRef} className="sm-icon-line sm-icon-line-v" />
+                        </span>
+                    </button>
+                </header>
+
+                <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open}>
+                    <div className="sm-panel-inner">
+                        <ul className="sm-panel-list" role="list" data-numbering={displayItemNumbering || undefined}>
+                            {items && items.length ? (
+                                items.map((it, idx) => (
+                                    <li className="sm-panel-itemWrap" key={it.label + idx}>
+                                        <a className="sm-panel-item" href={it.link} aria-label={it.ariaLabel || it.label} data-index={idx + 1} target={it.target}>
+                                            <span className="sm-panel-itemLabel">{it.label}</span>
+                                        </a>
+                                    </li>
+                                ))
+                            ) : (
+                                <li className="sm-panel-itemWrap" aria-hidden="true">
+                                    <span className="sm-panel-item">
+                                        <span className="sm-panel-itemLabel">No items</span>
+                                    </span>
+                                </li>
+                            )}
+                        </ul>
+                        {displaySocials && socialItems && socialItems.length > 0 && (
+                            <div className="sm-socials" aria-label="Social links">
+                                <h3 className="sm-socials-title">Connect</h3>
+                                <ul className="sm-socials-list" role="list">
+                                    {socialItems.map((s, i) => (
+                                        <li key={s.label + i} className="sm-socials-item">
+                                            <a href={s.link} target="_blank" rel="noopener noreferrer" className="sm-socials-link">
+                                                {s.label}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                </aside>
+            </div>
+        );
+    };
+
+    // ==========================================================
+    // ⭐️ PROFILE CARD COMPONENT ⭐️
+    // ==========================================================
+
+    const ProfileCardComponent = ({
+        avatarUrl = 'mywebiste/proflie image.png', 
+        iconUrl = '', 
+        grainUrl = '', 
+        behindGradient,
+        innerGradient,
+        showBehindGradient = true,
+        className = '',
+        enableTilt = true,
+        enableMobileTilt = false,
+        mobileTiltSensitivity = 5,
+        miniAvatarUrl,
+        name = 'HM Hisham Ahmed', 
+        title = 'Frontend Engineer', 
+        handle = 'hishamahmed01', 
+        status = 'Online',
+        contactText = 'Contact.html',
+        showUserInfo = true,
+        onContactClick
+    }) => {
+        const wrapRef = useRef(null);
+        const cardRef = useRef(null);
+
+        const animationHandlers = useMemo(() => {
+            if (!enableTilt) return null;
+
+            let rafId = null;
+
+            const updateCardTransform = (offsetX, offsetY, card, wrap) => {
+                const width = card.clientWidth;
+                const height = card.clientHeight;
+
+                const percentX = clamp((100 / width) * offsetX);
+                const percentY = clamp((100 / height) * offsetY);
+
+                const centerX = percentX - 50;
+                const centerY = percentY - 50;
+
+                const properties = {
+                    '--pointer-x': `${percentX}%`,
+                    '--pointer-y': `${percentY}%`,
+                    '--background-x': `${adjust(percentX, 0, 100, 35, 65)}%`,
+                    '--background-y': `${adjust(percentY, 0, 100, 35, 65)}%`,
+                    '--pointer-from-center': `${clamp(Math.hypot(percentY - 50, percentX - 50) / 50, 0, 1)}`,
+                    '--pointer-from-top': `${percentY / 100}`,
+                    '--pointer-from-left': `${percentX / 100}`,
+                    '--rotate-x': `${round(-(centerX / 5))}deg`,
+                    '--rotate-y': `${round(centerY / 4)}deg`
+                };
+
+                Object.entries(properties).forEach(([property, value]) => {
+                    wrap.style.setProperty(property, value);
+                });
+            };
+
+            const createSmoothAnimation = (duration, startX, startY, card, wrap) => {
+                const startTime = performance.now();
+                const targetX = wrap.clientWidth / 2;
+                const targetY = wrap.clientHeight / 2;
+
+                const animationLoop = currentTime => {
+                    const elapsed = currentTime - startTime;
+                    const progress = clamp(elapsed / duration);
+                    const easedProgress = easeInOutCubic(progress);
+
+                    const currentX = adjust(easedProgress, 0, 1, startX, targetX);
+                    const currentY = adjust(easedProgress, 0, 1, startY, targetY);
+
+                    updateCardTransform(currentX, currentY, card, wrap);
+
+                    if (progress < 1) {
+                        rafId = requestAnimationFrame(animationLoop);
+                    }
+                };
+
+                rafId = requestAnimationFrame(animationLoop);
+            };
+
+            return {
+                updateCardTransform,
+                createSmoothAnimation,
+                cancelAnimation: () => {
+                    if (rafId) {
+                        cancelAnimationFrame(rafId);
+                        rafId = null;
+                    }
+                }
+            };
+        }, [enableTilt]);
+
+        const handlePointerMove = useCallback(
+            event => {
+                const card = cardRef.current;
+                const wrap = wrapRef.current;
+
+                if (!card || !wrap || !animationHandlers) return;
+
+                const rect = card.getBoundingClientRect();
+                animationHandlers.updateCardTransform(event.clientX - rect.left, event.clientY - rect.top, card, wrap);
+            },
+            [animationHandlers]
+        );
+
+        const handlePointerEnter = useCallback(() => {
+            const card = cardRef.current;
+            const wrap = wrapRef.current;
+
+            if (!card || !wrap || !animationHandlers) return;
+
+            animationHandlers.cancelAnimation();
+            wrap.classList.add('active');
+            card.classList.add('active');
+        }, [animationHandlers]);
+
+        const handlePointerLeave = useCallback(
+            event => {
+                const card = cardRef.current;
+                const wrap = wrapRef.current;
+
+                if (!card || !wrap || !animationHandlers) return;
+
+                animationHandlers.createSmoothAnimation(
+                    ANIMATION_CONFIG.SMOOTH_DURATION,
+                    event.offsetX,
+                    event.offsetY,
+                    card,
+                    wrap
+                );
+                wrap.classList.remove('active');
+                card.classList.remove('active');
+            },
+            [animationHandlers]
+        );
+
+        const handleDeviceOrientation = useCallback(
+            event => {
+                const card = cardRef.current;
+                const wrap = wrapRef.current;
+
+                if (!card || !wrap || !animationHandlers) return;
+
+                const { beta, gamma } = event;
+                if (!beta || !gamma) return;
+
+                animationHandlers.updateCardTransform(
+                    card.clientHeight / 2 + gamma * mobileTiltSensitivity,
+                    card.clientWidth / 2 + (beta - ANIMATION_CONFIG.DEVICE_BETA_OFFSET) * mobileTiltSensitivity,
+                    card,
+                    wrap
+                );
+            },
+            [animationHandlers, mobileTiltSensitivity]
+        );
+
+        useEffect(() => {
+            if (!enableTilt || !animationHandlers) return;
+
+            const card = cardRef.current;
+            const wrap = wrapRef.current;
+
+            if (!card || !wrap) return;
+
+            const pointerMoveHandler = handlePointerMove;
+            const pointerEnterHandler = handlePointerEnter;
+            const pointerLeaveHandler = handlePointerLeave;
+            const deviceOrientationHandler = handleDeviceOrientation;
+
+            const handleClick = () => {
+                if (!enableMobileTilt || location.protocol !== 'https:') return;
+                if (typeof window.DeviceMotionEvent.requestPermission === 'function') {
+                    window.DeviceMotionEvent.requestPermission()
+                        .then(state => {
+                            if (state === 'granted') {
+                                window.addEventListener('deviceorientation', deviceOrientationHandler);
+                            }
+                        })
+                        .catch(err => console.error(err));
+                } else {
+                    window.addEventListener('deviceorientation', deviceOrientationHandler);
+                }
+            };
+
+            card.addEventListener('pointerenter', pointerEnterHandler);
+            card.addEventListener('pointermove', pointerMoveHandler);
+            card.addEventListener('pointerleave', pointerLeaveHandler);
+            card.addEventListener('click', handleClick);
+
+            const initialX = wrap.clientWidth - ANIMATION_CONFIG.INITIAL_X_OFFSET;
+            const initialY = ANIMATION_CONFIG.INITIAL_Y_OFFSET;
+
+            animationHandlers.updateCardTransform(initialX, initialY, card, wrap);
+            animationHandlers.createSmoothAnimation(ANIMATION_CONFIG.INITIAL_DURATION, initialX, initialY, card, wrap);
+
+            return () => {
+                card.removeEventListener('pointerenter', pointerEnterHandler);
+                card.removeEventListener('pointermove', pointerMoveHandler);
+                card.removeEventListener('pointerleave', pointerLeaveHandler);
+                card.removeEventListener('click', handleClick);
+                window.removeEventListener('deviceorientation', deviceOrientationHandler);
+                animationHandlers.cancelAnimation();
+            };
+        }, [
+            enableTilt,
+            enableMobileTilt,
+            animationHandlers,
+            handlePointerMove,
+            handlePointerEnter,
+            handlePointerLeave,
+            handleDeviceOrientation
+        ]);
+
+        const cardStyle = useMemo(
+            () => ({
+                '--icon': iconUrl ? `url(${iconUrl})` : 'none',
+                '--grain': grainUrl ? `url(${grainUrl})` : 'none',
+                '--behind-gradient': showBehindGradient ? (behindGradient ?? DEFAULT_BEHIND_GRADIENT) : 'none',
+                '--inner-gradient': innerGradient ?? DEFAULT_INNER_GRADIENT
+            }),
+            [iconUrl, grainUrl, showBehindGradient, behindGradient, innerGradient]
+        );
+
+        const handleContactClick = useCallback(() => {
+            alert("Contact Me button clicked!"); 
+            onContactClick?.();
+        }, [onContactClick]);
+
+        return (
+            <div ref={wrapRef} className={`pc-card-wrapper ${className}`.trim()} style={cardStyle}>
+                <section ref={cardRef} className="pc-card">
+                    <div className="pc-inside">
+                        <div className="pc-shine" />
+                        <div className="pc-glare" />
+                        <div className="pc-content pc-avatar-content">
+                            <img
+                                className="avatar"
+                                src={avatarUrl}
+                                alt={`${name || 'User'} avatar`}
+                                loading="lazy"
+                                onError={e => {
+                                    const target = e.target;
+                                    target.style.display = 'none';
+                                }}
+                            />
+                            {showUserInfo && (
+                                <div className="pc-user-info">
+                                    <div className="pc-user-details">
+                                        <div className="pc-mini-avatar">
+                                            <img
+                                                src={miniAvatarUrl || avatarUrl}
+                                                alt={`${name || 'User'} mini avatar`}
+                                                loading="lazy"
+                                                onError={e => {
+                                                    const target = e.target;
+                                                    target.style.opacity = '0.5';
+                                                    target.src = avatarUrl;
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="pc-user-text">
+                                            <div className="pc-handle">@{handle}</div>
+                                            <div className="pc-status">{status}</div>
+                                        </div>
+                                    </div>
+                                    <button
+                                        className="pc-contact-btn"
+                                        onClick={handleContactClick}
+                                        style={{ pointerEvents: 'auto' }}
+                                        type="button"
+                                        aria-label={`Contact ${name || 'user'}`}
+                                    >
+                                        {contactText}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                        <div className="pc-content">
+                            <div className="pc-details">
+                                <h3>{name}</h3>
+                                <p>{title}</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        );
+    };
+
+    const ProfileCard = React.memo(ProfileCardComponent);
+
+    // ==========================================================
+    // 🚀 MAIN APP & RENDER LOGIC 🚀
+    // ==========================================================
+    
+    // --- New Menu Data ---
+    const menuItems = [
+        { label: 'Home', link: 'index.html' },
+        { label: 'Projects', link: 'project.html' },
+        { label: 'About Me', link: 'aboutme.html' },
+        { label: 'Blog', link: 'blog.html' },
+        { label: 'Contact', link: 'contact.html' },
+        { label: 'View Resume', link: 'resume.pdf', target: '_blank' }
+    ];
+
+    const socialItems = [
+        { label: 'GitHub', link: 'https://github.com/hishamahmed01' },
+        { label: 'LinkedIn', link: 'https://www.linkedin.com/in/hisham-ahmed-1378a9367/' },
+        { label: 'Instagram', link: 'https://www.instagram.com/hishamahmed._/' }
+    ];
+
+    const HeaderComponent = () => (
+        <StaggeredMenu
+            logoUrl="mywebiste/proflie image.png"
+            position="right"
+            items={menuItems}
+            socialItems={socialItems}
+            displaySocials={true}
+            displayItemNumbering={true}
+            menuButtonColor="var(--text-primary)" // Black on light background
+            openMenuButtonColor="var(--text-primary)" 
+            changeMenuColorOnOpen={false} // Keep color consistent
+            colors={['var(--accent-2)', 'var(--accent-1)']} 
+            accentColor="var(--accent-3)" 
+            isFixed={true} 
+            onMenuOpen={() => {
+                const lenis = document.body.lenis;
+                if(lenis) lenis.stop();
+                document.body.classList.add('no-scroll');
+            }}
+            onMenuClose={() => {
+                const lenis = document.body.lenis;
+                if(lenis) lenis.start();
+                document.body.classList.remove('no-scroll');
+            }}
+        />
+    );
+
+
+    const App = () => (
+        <React.Fragment>
+            {/* Renders the fixed header outside of the main content flow */}
+            <HeaderComponent /> 
+            
+            <ProfileCard
+                name="HM Hisham Ahmed" 
+                title="Frontend Engineer" 
+                handle="hishamahmed01" 
+                status="Online"
+                contactText="Contact Me"
+                avatarUrl="mywebiste\proflie image.png" 
+                showUserInfo={true}
+                enableTilt={true}
+                enableMobileTilt={false}
+                onContactClick={() => console.log('Contact clicked on React card')}
+            />
+        </React.Fragment>
+    );
+
+    // --- RENDER ROOTS ---
+    const headerContainer = document.getElementById('react-header-container');
+    const cardContainer = document.getElementById('react-profile-card-container');
+    
+    if (headerContainer) {
+        ReactDOM.createRoot(headerContainer).render(<HeaderComponent />);
     }
-});
 
-
-// ------------------------------------------
-// 🌟 PRO-LEVEL SCROLL ANIMATIONS
-// ------------------------------------------
-
-// 1. Profile Image Parallax
-gsap.to(".profile-card .profile-image", {
-    y: 70, 
-    ease: "none",
-    scrollTrigger: {
-        trigger: ".hero",
-        start: "top bottom", 
-        end: "bottom top", 
-        scrub: true,
+    if (cardContainer) {
+        ReactDOM.createRoot(cardContainer).render(<ProfileCard 
+            name="HM Hisham Ahmed" 
+            title="Frontend Engineer" 
+            handle="hishamahmed01" 
+            status="Online"
+            contactText="Contact Me"
+            avatarUrl="mywebiste\proflie image.png" 
+            showUserInfo={true}
+            enableTilt={true}
+            enableMobileTilt={false}
+            onContactClick={() => console.log('Contact clicked on React card')}
+        />);
     }
-});
 
-// 2. Parallax Shift for Section Headers
-gsap.utils.toArray(".section-header").forEach(sectionHeader => {
-    const title = sectionHeader.querySelector('h2');
-    const subtitle = sectionHeader.querySelector('p');
+</script>
+<script>
+    // ------------------------------------------
+    // 🛠️ STANDARD UI LOGIC (Kept for environment setup)
+    // ------------------------------------------
 
-    // Title moves slower than scroll
-    gsap.to(title, {
-        y: -20, 
-        ease: "none",
-        scrollTrigger: {
-            trigger: sectionHeader,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
+    // Get Current Year for Footer
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // ------------------------------------------
+    // 🟢 LENIS + GSAP SCROLLTRIGGER INTEGRATION (Core Bridge)
+    // ------------------------------------------
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+        smoothTouch: false,
+    });
+    document.body.lenis = lenis; // Attach to body for global access
+
+    gsap.registerPlugin(ScrollTrigger);
+    lenis.on('scroll', ScrollTrigger.update); 
+    gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0); 
+
+    // ------------------------------------------
+    // 🌟 FULL PAGE PARALLAX ANIMATION (GSAP)
+    // ------------------------------------------
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const triggerElement = document.querySelector('#full-page-parallax [data-parallax-layers]');
+        
+        if (triggerElement) {
+            let tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: document.body, 
+                    start: "top top",
+                    end: "bottom top", 
+                    scrub: true
+                }
+            });
+            
+            const layers = [
+                { layer: "1", yMovement: '70vh' }, 
+                { layer: "2", yMovement: '55vh' }, 
+                { layer: "4", yMovement: '10vh' } 
+            ];
+            
+            layers.forEach((layerObj) => {
+                tl.to(
+                    triggerElement.querySelectorAll(`[data-parallax-layer="${layerObj.layer}"]`),
+                    {
+                        y: layerObj.yMovement, 
+                        ease: "none"
+                    },
+                    0 
+                );
+            });
         }
     });
 
-    // Subtitle moves slower than the title
-    if (subtitle) {
-        gsap.to(subtitle, {
-            y: -10, 
+
+    // ------------------------------------------
+    // 🌟 PRO-LEVEL SCROLL ANIMATIONS
+    // ------------------------------------------
+
+    // 2. Parallax Shift for Section Headers
+    gsap.utils.toArray(".section-header").forEach(sectionHeader => {
+        const title = sectionHeader.querySelector('h2');
+        const subtitle = sectionHeader.querySelector('p');
+
+        gsap.to(title, {
+            y: -20, 
             ease: "none",
             scrollTrigger: {
                 trigger: sectionHeader,
@@ -996,115 +2518,92 @@ gsap.utils.toArray(".section-header").forEach(sectionHeader => {
                 scrub: true,
             }
         });
-    }
-});
 
-// 3. Staggered Entrance for Feature Cards (`.reason-card`)
-gsap.from(".reason-card", {
-    opacity: 0,
-    y: 80, 
-    stagger: 0.15, 
-    duration: 1.2,
-    ease: "power3.out",
-    scrollTrigger: {
-        trigger: ".why-choose-me-grid",
-        start: "top 95%", 
-        toggleActions: "play none none none",
-    }
-});
-
-// 4. Staggered Entrance for Project Cards
-gsap.from(".project-card", {
-    opacity: 0,
-    y: 60,
-    stagger: 0.1,
-    duration: 0.8,
-    ease: "power2.out",
-    scrollTrigger: {
-        trigger: ".project-grid",
-        start: "top 90%",
-        toggleActions: "play none none none",
-    }
-});
-
-// 5. Contact Teaser Card Entrance
-gsap.from(".contact-teaser-card", {
-    opacity: 0,
-    y: 50,
-    duration: 1,
-    ease: "power2.out",
-    scrollTrigger: {
-        trigger: ".contact-teaser-card",
-        start: "top 90%",
-        toggleActions: "play none none none",
-    }
-});
-
-
-// ------------------------------------------
-// 🌟 MOUSE-FOLLOW DYNAMIC BACKGROUND
-// ------------------------------------------
-document.addEventListener('mousemove', (e) => {
-    const bgOverlay = document.getElementById('background-overlay');
-    if (!bgOverlay) return;
-
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const mouseX = e.clientX / w - 0.5;
-    const mouseY = e.clientY / h - 0.5;
-    const offsetX = mouseX * 5; 
-    const offsetY = mouseY * 5; 
-
-    bgOverlay.style.backgroundPosition = `${50 + offsetX}% ${50 + offsetY}%`;
-});
-
-// ------------------------------------------
-// 🛠️ STANDARD UI LOGIC
-// ------------------------------------------
-
-// Header minimization on scroll
-window.addEventListener('scroll', function() {
-    if (window.scrollY > 50) {
-        header.classList.add('minimized');
-    } else {
-        header.classList.remove('minimized');
-    }
-});
-
-// Mobile Menu Logic
-hamburgerMenu.addEventListener('click', () => {
-    mobileMenuOverlay.classList.toggle('active');
-    hamburgerMenu.classList.toggle('active');
-    document.body.classList.toggle('no-scroll'); 
-
-    if (document.body.classList.contains('no-scroll')) {
-        lenis.stop();
-    } else {
-        lenis.start();
-    }
-});
-
-// Close mobile menu when a link is clicked
-mobileMenuOverlay.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-        mobileMenuOverlay.classList.remove('active');
-        hamburgerMenu.classList.remove('active');
-        document.body.classList.remove('no-scroll');
-        lenis.start();
+        if (subtitle) {
+            gsap.to(subtitle, {
+                y: -10, 
+                ease: "none",
+                scrollTrigger: {
+                    trigger: sectionHeader,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true,
+                }
+            });
+        }
     });
-});
 
-// Loader Logic
-window.addEventListener('load', () => {
-    // Since the loader starts at opacity 1 in CSS (FIXED BUG)
-    // We delay slightly to allow the dots to animate, then fade it out.
-    setTimeout(() => {
-        loaderOverlay.style.opacity = '0';
+    // 3. Staggered Entrance for Feature Cards (`.reason-card`)
+    gsap.from(".reason-card", {
+        opacity: 0,
+        y: 80, 
+        stagger: 0.15, 
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+            trigger: ".why-choose-me-grid",
+            start: "top 95%", 
+            toggleActions: "play none none none",
+        }
+    });
+
+    // 4. Staggered Entrance for Project Cards
+    gsap.from(".project-card", {
+        opacity: 0,
+        y: 60,
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+            trigger: ".project-grid",
+            start: "top 90%",
+            toggleActions: "play none none none",
+        }
+    });
+
+    // 5. Contact Teaser Card Entrance
+    gsap.from(".contact-teaser-card", {
+        opacity: 0,
+        y: 50,
+        duration: 1,
+        ease: "power2.out",
+        scrollTrigger: {
+            trigger: ".contact-teaser-card",
+            start: "top 90%",
+            toggleActions: "play none none none",
+        }
+    });
+
+
+    // ------------------------------------------
+    // 🌟 MOUSE-FOLLOW DYNAMIC BACKGROUND
+    // ------------------------------------------
+    document.addEventListener('mousemove', (e) => {
+        const bgOverlay = document.getElementById('background-overlay');
+        if (!bgOverlay) return;
+
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const mouseX = e.clientX / w - 0.5;
+        const mouseY = e.clientY / h - 0.5;
+        const offsetX = mouseX * 5; 
+        const offsetY = mouseY * 5; 
+
+        bgOverlay.style.backgroundPosition = `${50 + offsetX}% ${50 + offsetY}%`;
+    });
+
+    // ------------------------------------------
+    // 🛠️ LOADER LOGIC
+    // ------------------------------------------
+    const loaderOverlay = document.getElementById('loader-overlay');
+    window.addEventListener('load', () => {
         setTimeout(() => {
-            loaderOverlay.style.display = 'none';
-        }, 500); // Wait for opacity transition to finish (0.5s)
-    }, 1000); // Initial 1-second delay
-});
+            loaderOverlay.style.opacity = '0';
+            setTimeout(() => {
+                loaderOverlay.style.display = 'none';
+            }, 500); // Wait for opacity transition to finish (0.5s)
+        }, 1000); // Initial 1-second delay
+    });
 </script>
 </body>
 </html>
