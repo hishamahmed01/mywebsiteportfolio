@@ -557,15 +557,6 @@ a:hover { color: var(--accent-2); }
     mix-blend-mode: overlay;
 }
 
-.parallax__fade {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 25%;
-    z-index: 5;
-    background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
-}
 
 /* --- Fonts for Parallax Title --- */
 @font-face {
@@ -1656,7 +1647,7 @@ main { padding-top: 40px; }
         displaySocials = true,
         displayItemNumbering = true,
         className,
-        logoUrl = '/src/assets/logos/reactbits-gh-white.svg',
+        logoUrl = 'C:\Users\Hisham\OneDrive\Desktop\project adds\proflie image.png',
         menuButtonColor = '#fff',
         openMenuButtonColor = '#fff',
         accentColor = '#5227FF',
@@ -1980,7 +1971,7 @@ main { padding-top: 40px; }
                 <header className="staggered-menu-header" aria-label="Main navigation header">
                     <div className="sm-logo" aria-label="Logo">
                         <img
-                            src={logoUrl || 'mywebiste/proflie image.png'}
+                            src={logoUrl || 'C:\Users\Hisham\OneDrive\Desktop\project adds\proflie image.png'}
                             alt="Logo"
                             className="sm-logo-img"
                             draggable={false}
@@ -2057,8 +2048,8 @@ main { padding-top: 40px; }
     // ==========================================================
 
     const ProfileCardComponent = ({
-        avatarUrl = 'mywebiste/proflie image.png', 
-        iconUrl = '', 
+        avatarUrl = 'C:\Users\Hisham\OneDrive\Desktop\project adds\proflie image.png', 
+        iconUrl = 'C:\Users\Hisham\OneDrive\Desktop\project adds\proflie image.png', 
         grainUrl = '', 
         behindGradient,
         innerGradient,
@@ -2067,7 +2058,7 @@ main { padding-top: 40px; }
         enableTilt = true,
         enableMobileTilt = false,
         mobileTiltSensitivity = 5,
-        miniAvatarUrl,
+        miniAvatarUrl='C:\Users\Hisham\OneDrive\Desktop\project adds\proflie image.png',
         name = 'HM Hisham Ahmed', 
         title = 'Frontend Engineer', 
         handle = 'hishamahmed01', 
@@ -2367,7 +2358,7 @@ main { padding-top: 40px; }
 
     const HeaderComponent = () => (
         <StaggeredMenu
-            logoUrl="mywebiste/proflie image.png"
+            logoUrl="C:\Users\Hisham\OneDrive\Desktop\project adds\proflie image.png"
             position="right"
             items={menuItems}
             socialItems={socialItems}
@@ -2404,7 +2395,7 @@ main { padding-top: 40px; }
                 handle="hishamahmed01" 
                 status="Online"
                 contactText="Contact Me"
-                avatarUrl="mywebiste\proflie image.png" 
+                avatarUrl="C:\Users\Hisham\OneDrive\Desktop\project adds\proflie image.pngg" 
                 showUserInfo={true}
                 enableTilt={true}
                 enableMobileTilt={false}
@@ -2428,7 +2419,7 @@ main { padding-top: 40px; }
             handle="hishamahmed01" 
             status="Online"
             contactText="Contact Me"
-            avatarUrl="mywebiste\proflie image.png" 
+            avatarUrl="C:\Users\Hisham\OneDrive\Desktop\project adds\proflie image.png" 
             showUserInfo={true}
             enableTilt={true}
             enableMobileTilt={false}
